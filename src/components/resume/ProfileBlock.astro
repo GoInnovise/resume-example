@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { withBase } from "../../lib/url";
 
 type Profile = CollectionEntry<"resumes">["data"]["profile"];
 
@@ -13,7 +14,7 @@ const alt = profile.avatarAlt ?? profile.name;
 
 <div class="resume-profile flex flex-col items-center gap-4 text-center">
   <img
-    src={`/images/resumes/${profile.avatar}.svg`}
+    src={withBase(`/images/resumes/${profile.avatar}.svg`)}
     alt={alt}
     width="160"
     height="160"

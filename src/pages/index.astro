@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
+import { withBase } from "../lib/url";
 
 const resumes = (await getCollection("resumes")).sort((a, b) =>
   a.data.profile.name.localeCompare(b.data.profile.name),
@@ -13,7 +14,7 @@ const resumes = (await getCollection("resumes")).sort((a, b) =>
 >
   <header class="border-b border-black/5">
     <div class="mx-auto flex max-w-[720px] items-center px-6 py-4">
-      <a href="/" class="font-heading text-lg font-semibold">Resumes</a>
+      <a href={withBase("/")} class="font-heading text-lg font-semibold">Resumes</a>
     </div>
   </header>
 
@@ -30,7 +31,7 @@ const resumes = (await getCollection("resumes")).sort((a, b) =>
         resumes.map((resume) => (
           <li>
             <a
-              href={`/resumes/${resume.id}/`}
+              href={withBase(`/resumes/${resume.id}/`)}
               class="bg-surface-card hover:border-brand-500 block rounded-xl border border-black/5 px-5 py-4 shadow-sm transition-colors"
             >
               <span class="text-brand-500 text-xs font-semibold tracking-widest uppercase">

@@ -11,6 +11,7 @@ import ProjectsList from "../components/resume/ProjectsList.astro";
 import PublicationsList from "../components/resume/PublicationsList.astro";
 import LanguagesList from "../components/resume/LanguagesList.astro";
 import InterestsList from "../components/resume/InterestsList.astro";
+import { absoluteUrl, withBase } from "../lib/url";
 
 interface Props {
   resume: CollectionEntry<"resumes">["data"];
@@ -20,9 +21,7 @@ interface Props {
 const { resume, slug } = Astro.props;
 const educationInSidebar = resume.display?.educationInSidebar ?? true;
 const buildDate = new Date().toISOString().slice(0, 10);
-const versionUrl = Astro.site
-  ? new URL(`/resumes/${slug}/`, Astro.site).href
-  : `/resumes/${slug}/`;
+const versionUrl = absoluteUrl(`/resumes/${slug}/`, Astro.site);
 
 /*
  * The sidebar is split into two regions (top: name + contact; bottom:
@@ -43,12 +42,12 @@ const hasSidebarBottom =
   <div
     class="mx-auto flex max-w-[1200px] items-center gap-4 px-6 py-4 lg:px-12"
   >
-    <a href="/" class="font-heading text-text-primary text-lg font-semibold">
+    <a href={withBase("/")} class="font-heading text-text-primary text-lg font-semibold">
       Resumes
     </a>
     <div class="ml-auto flex items-center gap-2">
       <a
-        href={`/resumes/${slug}/resume.docx`}
+        href={withBase(`/resumes/${slug}/resume.docx`)}
         class="resume-print-button bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-white transition-colors sm:px-4"
         download
       >
@@ -56,7 +55,7 @@ const hasSidebarBottom =
         <span class="sm:hidden">DOCX</span>
       </a>
       <a
-        href={`/resumes/${slug}/print/`}
+        href={withBase(`/resumes/${slug}/print/`)}
         class="border-brand-500 text-brand-600 hover:bg-brand-50 inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors sm:px-4"
       >
         <svg
@@ -144,7 +143,7 @@ const hasSidebarBottom =
     class="text-text-tertiary mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-2 px-6 py-6 text-sm lg:px-12"
   >
     <p>Built from <code>src/content/resumes/{slug}.yaml</code></p>
-    <a href="/" class="hover:text-brand-500 transition-colors">All resumes</a>
+    <a href={withBase("/")} class="hover:text-brand-500 transition-colors">All resumes</a>
   </div>
 </footer>
 

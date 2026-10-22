@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { absoluteUrl } from "../lib/url";
 
 interface Props {
   resume: CollectionEntry<"resumes">["data"];
@@ -8,9 +9,7 @@ interface Props {
 
 const { resume, slug } = Astro.props;
 const buildDate = new Date().toISOString().slice(0, 10);
-const versionUrl = Astro.site
-  ? new URL(`/resumes/${slug}/print/`, Astro.site).href
-  : `/resumes/${slug}/print/`;
+const versionUrl = absoluteUrl(`/resumes/${slug}/print/`, Astro.site);
 
 const stripProtocol = (value: string) =>
   value.replace(/^https?:\/\//i, "").replace(/\/$/g, "");
