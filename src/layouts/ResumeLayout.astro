@@ -1,0 +1,195 @@
+---
+import "../styles/resume-print.css";
+import type { CollectionEntry } from "astro:content";
+import ProfileBlock from "../components/resume/ProfileBlock.astro";
+import ContactList from "../components/resume/ContactList.astro";
+import CareerProfile from "../components/resume/CareerProfile.astro";
+import ExperienceList from "../components/resume/ExperienceList.astro";
+import EducationList from "../components/resume/EducationList.astro";
+import SkillsList from "../components/resume/SkillsList.astro";
+import ProjectsList from "../components/resume/ProjectsList.astro";
+import PublicationsList from "../components/resume/PublicationsList.astro";
+import LanguagesList from "../components/resume/LanguagesList.astro";
+import InterestsList from "../components/resume/InterestsList.astro";
+
+interface Props {
+  resume: CollectionEntry<"resumes">["data"];
+  slug: string;
+}
+
+const { resume, slug } = Astro.props;
+const educationInSidebar = resume.display?.educationInSidebar ?? true;
+const buildDate = new Date().toISOString().slice(0, 10);
+const versionUrl = Astro.site
+  ? new URL(`/resumes/${slug}/`, Astro.site).href
+  : `/resumes/${slug}/`;
+
+/*
+ * The sidebar is split into two regions (top: name + contact; bottom:
+ * education + languages + interests) so the print flow produces an
+ * ATS-friendly single-column reading order: name -> contact -> summary
+ * -> experience -> skills -> projects -> education.
+ *
+ * Skip the bottom region entirely when it would be empty, otherwise CSS
+ * grid allocates an empty slot on the right column below the top sidebar.
+ */
+const hasSidebarBottom =
+  (educationInSidebar && (resume.education?.length ?? 0) > 0) ||
+  (resume.languages?.length ?? 0) > 0 ||
+  (resume.interests?.length ?? 0) > 0;
+---
+
+<header class="resume-header bg-surface-page border-b border-black/5">
+  <div
+    class="mx-auto flex max-w-[1200px] items-center gap-4 px-6 py-4 lg:px-12"
+  >
+    <a href="/" class="font-heading text-text-primary text-lg font-semibold">
+      Resumes
+    </a>
+    <div class="ml-auto flex items-center gap-2">
+      <a
+        href={`/resumes/${slug}/resume.docx`}
+        class="resume-print-button bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-white transition-colors sm:px-4"
+        download
+      >
+        <span class="hidden sm:inline">Download DOCX</span>
+        <span class="sm:hidden">DOCX</span>
+      </a>
+      <a
+        href={`/resumes/${slug}/print/`}
+        class="border-brand-500 text-brand-600 hover:bg-brand-50 inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors sm:px-4"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.114-1.274.184-1.454.241-2.476 1.5-2.476 2.917v6.198a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.131l-.155-1.705h.27a3 3 0 0 0 3-3V9.466c0-1.417-1.022-2.676-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z"
+            clip-rule="evenodd"></path>
+        </svg>
+        <span class="hidden sm:inline">Print version</span>
+        <span class="sm:hidden">Print</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="bg-surface-page">
+  <div class="mx-auto max-w-[1200px] px-6 py-10 lg:px-12 lg:py-14">
+    <div class="bg-surface-card overflow-hidden rounded-xl shadow-sm">
+      <div class="resume-grid">
+        {
+          /*
+          Sidebar top -- name and contact. Renders FIRST in HTML source so
+          the print (single-column) flow puts identity at the top of the
+          page, where every ATS parser expects to find it.
+        */
+        }
+        <aside
+          class="resume-sidebar resume-sidebar-top bg-brand-500 print:bg-text-primary px-6 py-10 text-white md:pb-12 lg:px-8 lg:pt-14"
+        >
+          <ProfileBlock profile={resume.profile} />
+          <ContactList contact={resume.contact} />
+        </aside>
+
+        {/* Main column */}
+        <div class="resume-main px-6 py-10 lg:px-12 lg:py-14">
+          <div class="space-y-9">
+            <CareerProfile data={resume.careerProfile} />
+            <ExperienceList experiences={resume.experiences} />
+            {
+              !educationInSidebar && (
+                <EducationList education={resume.education} variant="main" />
+              )
+            }
+            <SkillsList skills={resume.skills} />
+            <ProjectsList projects={resume.projects} />
+            <PublicationsList publications={resume.publications} />
+          </div>
+        </div>
+
+        {
+          /*
+          Sidebar bottom -- education, languages, interests. Renders LAST
+          in HTML source so the print flow puts education at the bottom of
+          the page (textbook order for an experienced candidate). Skipped
+          entirely when none of these sections have content.
+        */
+        }
+        {
+          hasSidebarBottom && (
+            <aside class="resume-sidebar resume-sidebar-bottom sm:text-text-black lg:bg-brand-500 print:bg-text-primary px-6 pb-10 sm:bg-white lg:px-8 lg:pb-14 lg:text-white">
+              {educationInSidebar && (
+                <EducationList education={resume.education} variant="sidebar" />
+              )}
+              <LanguagesList languages={resume.languages} />
+              <InterestsList interests={resume.interests} />
+            </aside>
+          )
+        }
+      </div>
+    </div>
+
+    <small class="resume-print-footer">
+      Generated {buildDate} · {versionUrl}
+    </small>
+  </div>
+</main>
+
+<footer class="resume-footer bg-surface-page border-t border-black/5">
+  <div
+    class="text-text-tertiary mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-2 px-6 py-6 text-sm lg:px-12"
+  >
+    <p>Built from <code>src/content/resumes/{slug}.yaml</code></p>
+    <a href="/" class="hover:text-brand-500 transition-colors">All resumes</a>
+  </div>
+</footer>
+
+<style is:global>
+  /*
+   * Resume layout grid.
+   *
+   * Source order in HTML is: sidebar-top -> main -> sidebar-bottom. This
+   * source order is intentional: on mobile and in print, items flow
+   * top-to-bottom in source order, producing an ATS-parseable PDF with
+   * the candidate name at the top, professional summary -> experience ->
+   * skills -> projects in the middle, and education at the bottom.
+   *
+   * On desktop (>= 1024px), CSS grid template areas override the source
+   * order so the visual layout matches the prior design: sidebar visible
+   * on the right (split into top and bottom regions visually continuous
+   * via shared background color), main column on the left spanning both
+   * rows.
+   *
+   * Print viewports for Letter (~816px) and A4 (~794px) fall below the
+   * 1024px breakpoint, so print naturally uses the mobile single-column
+   * fallback. resume-print.css adds a defensive !important override in
+   * case any browser prints at a wider viewport.
+   */
+  .resume-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    .resume-grid {
+      grid-template-columns: 1fr 320px;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "main sidebar-top"
+        "main sidebar-bottom";
+    }
+    .resume-main {
+      grid-area: main;
+    }
+    .resume-sidebar-top {
+      grid-area: sidebar-top;
+    }
+    .resume-sidebar-bottom {
+      grid-area: sidebar-bottom;
+    }
+  }
+</style>

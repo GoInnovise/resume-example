@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Experiences = CollectionEntry<"resumes">["data"]["experiences"];
+
+interface Props {
+  experiences: Experiences;
+}
+
+const { experiences } = Astro.props;
+---
+
+{
+  experiences.length > 0 && (
+    <section class="resume-section">
+      <h2 class="font-heading text-brand-500 mb-5 text-lg font-semibold tracking-wide uppercase">
+        Experience
+      </h2>
+      <div class="space-y-7">
+        {experiences.map((exp) => (
+          <article class="resume-experience">
+            <header class="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 class="font-heading text-text-primary text-base font-semibold">
+                {exp.role}
+              </h3>
+              <span class="text-text-tertiary text-sm whitespace-nowrap">
+                {exp.time}
+              </span>
+            </header>
+            <p class="text-text-secondary mb-3 text-sm">
+              <span class="font-medium">{exp.company}</span>
+              {exp.location && (
+                <>
+                  <span class="text-text-tertiary"> · </span>
+                  <span>{exp.location}</span>
+                </>
+              )}
+            </p>
+            {exp.summary && (
+              <p class="text-text-secondary mb-3 leading-relaxed">
+                {exp.summary}
+              </p>
+            )}
+            {exp.bullets && exp.bullets.length > 0 && (
+              <ul class="text-text-secondary list-outside list-disc space-y-1.5 pl-5 leading-relaxed">
+                {exp.bullets.map((bullet) => (
+                  <li>{bullet}</li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}

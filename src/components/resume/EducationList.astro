@@ -1,0 +1,52 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Education = CollectionEntry<"resumes">["data"]["education"];
+
+interface Props {
+  education: Education;
+  variant?: "sidebar" | "main";
+}
+
+const { education, variant = "main" } = Astro.props;
+const inSidebar = variant === "sidebar";
+---
+
+{
+  education && education.length > 0 && (
+    <section class={inSidebar ? "resume-section mt-8" : "resume-section"}>
+      <h2
+        class:list={[
+          "font-heading mb-3 text-lg font-semibold tracking-wide uppercase",
+          inSidebar ? "text-black lg:text-white" : "text-brand-500",
+        ]}
+      >
+        Education
+      </h2>
+      <ul class:list={["space-y-3", inSidebar ? "text-sm text-white/90" : "text-text-secondary"]}>
+        {education.map((edu) => (
+          <li>
+            <p class={inSidebar ? "font-medium text-black lg:text-white" : "font-medium text-text-primary"}>
+              {edu.degree ? `${edu.degree}` : edu.university}
+            </p>
+            {edu.degree && (
+              <p class={inSidebar ? "text-black/80 lg:text-white/80" : "text-text-secondary"}>
+                {edu.university}
+              </p>
+            )}
+            {edu.time && (
+              <p class={inSidebar ? "text-xs text-black/60 lg:text-white/60" : "text-text-tertiary text-sm"}>
+                {edu.time}
+              </p>
+            )}
+            {edu.details && (
+              <p class={inSidebar ? "mt-1 text-xs text-black/70 lg:text-white/70" : "text-text-tertiary mt-1 text-sm"}>
+                {edu.details}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Languages = CollectionEntry<"resumes">["data"]["languages"];
+
+interface Props {
+  languages: Languages;
+}
+
+const { languages } = Astro.props;
+---
+
+{
+  languages && languages.length > 0 && (
+    <section class="resume-section mt-8">
+      <h2 class="font-heading mb-3 text-lg font-semibold tracking-wide text-white uppercase">
+        Languages
+      </h2>
+      <ul class="space-y-2 text-sm text-white/90">
+        {languages.map((lang) => (
+          <li class="flex items-baseline justify-between gap-3">
+            <span class="font-medium text-white">{lang.idiom}</span>
+            <span class="text-white/70">{lang.level}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

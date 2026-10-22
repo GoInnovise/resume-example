@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type CareerProfileData = CollectionEntry<"resumes">["data"]["careerProfile"];
+
+interface Props {
+  data: CareerProfileData;
+}
+
+const { data } = Astro.props;
+---
+
+<section class="resume-section">
+  <h2
+    class="font-heading text-brand-500 mb-3 text-lg font-semibold tracking-wide uppercase"
+  >
+    {data.title}
+  </h2>
+  <p class="text-text-secondary leading-relaxed">{data.summary}</p>
+</section>

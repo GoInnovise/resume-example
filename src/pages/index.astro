@@ -1,0 +1,76 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const resumes = (await getCollection("resumes")).sort((a, b) =>
+  a.data.profile.name.localeCompare(b.data.profile.name),
+);
+---
+
+<Layout
+  title="Resumes"
+  description="Host a resume from a YAML file. This repository includes a dev container and one fictional sample."
+>
+  <header class="border-b border-black/5">
+    <div class="mx-auto flex max-w-[720px] items-center px-6 py-4">
+      <a href="/" class="font-heading text-lg font-semibold">Resumes</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-[720px] px-6 py-12">
+    <h1 class="text-3xl font-semibold tracking-tight">Resumes from YAML</h1>
+    <p class="text-text-secondary mt-4 max-w-prose leading-relaxed">
+      Each file in <code>src/content/resumes</code> becomes a page, a print
+      view, and a Word download. Open the repository in the dev container, edit
+      a file, and the site rebuilds.
+    </p>
+
+    <ul class="mt-10 space-y-4">
+      {
+        resumes.map((resume) => (
+          <li>
+            <a
+              href={`/resumes/${resume.id}/`}
+              class="bg-surface-card hover:border-brand-500 block rounded-xl border border-black/5 px-5 py-4 shadow-sm transition-colors"
+            >
+              <span class="text-brand-500 text-xs font-semibold tracking-widest uppercase">
+                Sample
+              </span>
+              <span class="mt-1 block text-lg font-semibold">
+                {resume.data.profile.name}
+              </span>
+              <span class="text-text-secondary mt-1 block text-sm">
+                {resume.data.profile.tagline}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="mt-14">
+      <h2 class="text-xl font-semibold">Add a resume</h2>
+      <ol class="text-text-secondary mt-4 list-decimal space-y-3 pl-5 leading-relaxed">
+        <li>
+          Copy <code>src/content/resumes/morgan-hale.yaml</code>. The filename,
+          without the extension, is the URL slug.
+        </li>
+        <li>
+          Add a portrait at
+          <code>public/images/resumes/&#123;slug&#125;.svg</code>. The
+          <code>avatar</code> field is that slug.
+        </li>
+        <li>
+          Run <code>npm run dev</code> and open <code>/resumes/&#123;slug&#125;/</code>.
+          <code>/print/</code> is the single-column page for saving a PDF.
+          <code>/resume.docx</code> downloads a Word file.
+        </li>
+      </ol>
+      <p class="text-text-tertiary mt-6 text-sm leading-relaxed">
+        Morgan Hale is fictional sample data. Replace that file when you publish
+        your own. Set <code>site</code> in <code>astro.config.mjs</code> before
+        you deploy so the printed page can cite an absolute URL.
+      </p>
+    </section>
+  </main>
+</Layout>

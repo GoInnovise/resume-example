@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import ResumeLayout from "../../layouts/ResumeLayout.astro";
+
+export async function getStaticPaths() {
+  const resumes = await getCollection("resumes");
+  return resumes.map((entry) => ({
+    params: { slug: entry.id },
+    props: { resume: entry.data, slug: entry.id },
+  }));
+}
+
+interface Props {
+  resume: Awaited<ReturnType<typeof getCollection<"resumes">>>[number]["data"];
+  slug: string;
+}
+
+const { resume, slug } = Astro.props;
+
+function truncateAtSentence(text: string, maxLen: number): string {
+  const collapsed = text.replace(/\s+/g, " ").trim();
+  if (collapsed.length <= maxLen) return collapsed;
+  const slice = collapsed.slice(0, maxLen);
+  const lastPeriod = slice.lastIndexOf(". ");
+  if (lastPeriod > maxLen * 0.5) {
+    return slice.slice(0, lastPeriod + 1);
+  }
+  const lastSpace = slice.lastIndexOf(" ");
+  return slice.slice(0, lastSpace > 0 ? lastSpace : maxLen).trimEnd() + "…";
+}
+
+const pageTitle = `${resume.profile.name} — ${resume.profile.tagline}`;
+const pageDescription = truncateAtSentence(resume.careerProfile.summary, 160);
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <ResumeLayout resume={resume} slug={slug} />
+</Layout>

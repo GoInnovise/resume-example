@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Skills = CollectionEntry<"resumes">["data"]["skills"];
+
+interface Props {
+  skills: Skills;
+}
+
+const { skills } = Astro.props;
+---
+
+{
+  skills.length > 0 && (
+    <section class="resume-section">
+      <h2 class="font-heading text-brand-500 mb-4 text-lg font-semibold tracking-wide uppercase">
+        Skills
+      </h2>
+      <dl class="grid gap-x-6 gap-y-3 sm:grid-cols-[max-content_1fr]">
+        {skills.map((skill) => (
+          <>
+            <dt class="text-text-primary text-sm font-semibold">{skill.title}</dt>
+            <dd class="text-text-secondary text-sm leading-relaxed">{skill.value}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+  )
+}

@@ -1,0 +1,124 @@
+/*
+ * Resume print styles. Loaded only by `src/layouts/ResumeLayout.astro`.
+ *
+ * Two intents kept separate:
+ *  - Site chrome and on-screen UI: hidden in print via `display: none`
+ *  - Entrance-animation classes: defensively restored to visible state with
+ *    `!important` so future pages that happen to land .animate-on-scroll on
+ *    a resume don't render invisible when printed.
+ */
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: var(--color-text-primary) !important;
+  }
+
+  .resume-header,
+  .resume-footer,
+  .resume-print-button {
+    display: none !important;
+  }
+
+  .animate-on-scroll,
+  .stagger-children > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* Strip the page-level container chrome so the resume bleeds to @page margins */
+  main {
+    background: white !important;
+  }
+  main > div {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  main > div > div {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /*
+   * Force single-column layout at print for ATS-friendly parsing.
+   *
+   * The HTML source order is sidebar-top -> main -> sidebar-bottom.
+   * Forcing single column makes the print PDF flow in that source order,
+   * producing the textbook resume reading sequence: name and contact at
+   * the top, professional summary -> experience -> skills -> projects
+   * in the middle, education at the bottom.
+   *
+   * The `grid-template-areas: none` override discards the desktop area
+   * placement (defined in ResumeLayout.astro for viewports >= 1024px) so
+   * items fall back to auto-placement in source order, even if a browser
+   * prints at a wider viewport.
+   */
+  .resume-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-areas: none !important;
+  }
+
+  /*
+   * Flip the sidebar regions from coral-on-white to plain text-on-white
+   * for print. The brand color reads well on screen but consumes ink and
+   * looks heavy on paper. Apply to both sidebar-top and sidebar-bottom
+   * (both share the .resume-sidebar class) and every nested element so
+   * Tailwind utility colors (text-white, text-white/90, etc.) don't survive.
+   */
+  .resume-sidebar,
+  .resume-sidebar * {
+    background: transparent !important;
+    color: var(--color-text-primary) !important;
+  }
+  .resume-profile picture img {
+    border-color: #e5e5e5 !important;
+  }
+
+  .resume-section,
+  .resume-experience {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .resume-section h2 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /*
+   * Preserve link visibility — recipients of a printed resume need to see
+   * which words are clickable and to type URLs they can't click. Sidebar
+   * already shows the visible URL adjacent to each link, so we don't need
+   * the `a[href]::after` URL-appending pattern.
+   */
+  a {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+  }
+
+  /* Print-only versioning footer */
+  .resume-print-footer {
+    display: block !important;
+    font-size: 9pt;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5in;
+    padding-top: 0.25in;
+    border-top: 1px solid #ddd;
+    page-break-before: avoid;
+    break-before: avoid;
+  }
+}
+
+/* Hidden on screen — only visible in print */
+@media screen {
+  .resume-print-footer {
+    display: none;
+  }
+}

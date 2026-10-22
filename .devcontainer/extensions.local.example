@@ -1,0 +1,7 @@
+# Copy this file to extensions.local
+# List personal VS Code or Cursor extension IDs, one per line.
+# extensions.local is gitignored.
+# Example:
+shardulm94.trailing-spaces
+mhutchie.git-graph
+eamodio.gitlens

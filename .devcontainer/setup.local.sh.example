@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Copy this file to setup.local.sh to run it when the container is created.
+# setup.local.sh is gitignored.
+
+echo "Running my custom local setup..."
+
+# Example: Install zsh and oh-my-zsh if not already installed
+# Note: You might need sudo for installing packages. 'node' user usually has sudo access in devcontainers.
+
+# if ! command -v zsh &> /dev/null; then
+#     echo "Installing zsh..."
+#     sudo apt-get update && sudo apt-get install -y zsh
+# fi
+
+# Example: Set zsh as default shell (this changes it for the current user)
+# sudo chsh -s $(which zsh) $(whoami)
+
+# Example: Add custom aliases
+# echo "alias ll='ls -alF'" >> ~/.bashrc
+# echo "alias ll='ls -alF'" >> ~/.zshrc
+
+
+# Setup bash-git-prompt for the node user
+echo "Installing bash-git-prompt..."
+# Clone bash-git-prompt if it isn't already there
+if [ ! -d "$HOME/.bash-git-prompt" ]; then
+  git clone https://github.com/magicmonty/bash-git-prompt.git \
+    "$HOME/.bash-git-prompt" --depth=1
+fi
+
+# Append config to ~/.bashrc if it's not already present
+if ! grep -q 'bash-git-prompt/gitprompt.sh' "$HOME/.bashrc" 2>/dev/null; then
+  cat >> "$HOME/.bashrc" <<'EOF'
+if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+    GIT_PROMPT_ONLY_IN_REPO=1
+    source "$HOME/.bash-git-prompt/gitprompt.sh"
+fi
+GIT_PROMPT_THEME=Solarized
+GIT_PROMPT_IGNORE_STASH=1
+EOF
+fi
+
+# Set the git identity for this machine. It stays out of the shared container
+# because the address changes from project to project.
+git config --global user.email "you@example.com"
+git config --global core.editor "vim"
+
+
+echo "Custom setup finished!"

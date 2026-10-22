@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+import ResumeAtsLayout from "../../../layouts/ResumeAtsLayout.astro";
+
+export async function getStaticPaths() {
+  const resumes = await getCollection("resumes");
+  return resumes.map((entry) => ({
+    params: { slug: entry.id },
+    props: { resume: entry.data, slug: entry.id },
+  }));
+}
+
+interface Props {
+  resume: Awaited<ReturnType<typeof getCollection<"resumes">>>[number]["data"];
+  slug: string;
+}
+
+const { resume, slug } = Astro.props;
+const pageTitle = `${resume.profile.name} — Print`;
+const pageDescription = `ATS-friendly resume for ${resume.profile.name}.`;
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <ResumeAtsLayout resume={resume} slug={slug} />
+</Layout>

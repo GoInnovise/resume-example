@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Publications = CollectionEntry<"resumes">["data"]["publications"];
+
+interface Props {
+  publications: Publications;
+}
+
+const { publications } = Astro.props;
+---
+
+{
+  publications && publications.papers.length > 0 && (
+    <section class="resume-section">
+      <h2 class="font-heading text-brand-500 mb-3 text-lg font-semibold tracking-wide uppercase">
+        {publications.title}
+      </h2>
+      {publications.intro && (
+        <p class="text-text-secondary mb-4 leading-relaxed">{publications.intro}</p>
+      )}
+      <ul class="space-y-3">
+        {publications.papers.map((paper) => (
+          <li>
+            <p class="text-text-primary font-medium">{paper.title}</p>
+            <p class="text-text-secondary text-sm leading-relaxed">
+              {paper.authors}
+            </p>
+            <p class="text-text-tertiary text-sm italic">{paper.conference}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

@@ -1,0 +1,107 @@
+# Fictional sample. Replace this file with your own resume.
+# The filename (without .yaml) is the URL slug: /resumes/morgan-hale/
+
+profile:
+  name: Morgan Hale
+  tagline: Staff Software Engineer
+  avatar: morgan-hale
+  avatarAlt: Illustrated portrait of Morgan Hale
+  location: Portland, Oregon
+
+contact:
+  email: morgan.hale@example.com
+  phone: (503) 555-0148
+  website: morganhale.example
+  linkedin: morgan-hale-example
+  github: morgan-hale-example
+
+careerProfile:
+  title: Career profile
+  summary: >-
+    Morgan builds the web applications a product team ships and the pipeline
+    that gets them there. Recent work is a multi-tenant scheduling product
+    for field technicians, a design-system migration off a one-off component
+    library, and the GitHub Actions workflows that cut a release without a
+    release engineer in the loop.
+
+experiences:
+  - role: Staff Software Engineer
+    time: March 2022 - Present
+    company: Northwind Instruments
+    location: Portland, Oregon
+    summary: >-
+      Leads the scheduling product used by field technicians to book, route,
+      and close service visits.
+    bullets:
+      - Shipped a route planner that replaced a spreadsheet handoff between dispatch and the field team.
+      - Split a shared UI kit out of three product repos and published it as an internal package.
+      - Added review apps on pull requests so product and support could click a branch before merge.
+      - Kept the on-call rotation to business hours by paging only on customer-visible failures.
+
+  - role: Senior Software Engineer
+    time: June 2018 - February 2022
+    company: Lumen & Co.
+    location: Remote
+    summary: >-
+      Worked on the storefront and the admin tools merchandisers used to
+      publish a weekly catalog.
+    bullets:
+      - Rebuilt the catalog editor so a merchandiser could schedule a price change without a deploy.
+      - Moved image processing off the request path and onto a queue, which took product-page time-to-first-byte from about 1.8s to under 400ms.
+      - Wrote the runbook the on-call engineer used during the holiday traffic spike.
+
+  - role: Software Engineer
+    time: August 2015 - May 2018
+    company: Harbor Line Transit
+    location: Seattle, Washington
+    bullets:
+      - Built the public trip-planner page on top of the agency's GTFS feed.
+      - Added an alerts API so a detour could appear on the site within a minute of being filed.
+
+skills:
+  - title: Languages
+    value: TypeScript, JavaScript, SQL, Go
+  - title: Web
+    value: React, Astro, Node.js, PostgreSQL
+  - title: Delivery
+    value: GitHub Actions, Docker, Terraform
+  - title: Practice
+    value: Code review, on-call, design-system maintenance
+
+education:
+  - degree: B.S. Computer Science
+    university: Cascadia State University
+    time: "2011 - 2015"
+    details: Capstone on delay prediction for a regional bus network.
+
+projects:
+  title: Selected projects
+  intro: Small tools built alongside the day job.
+  assignments:
+    - title: Dispatch notes
+      link: https://example.com/dispatch-notes
+      tagline: A small notes app for recording what changed during an on-call shift.
+    - title: GTFS preview
+      link: https://example.com/gtfs-preview
+      tagline: A local viewer for a transit feed, used to check a detour before publishing it.
+
+publications:
+  title: Talks
+  papers:
+    - title: Review apps for a team that does not want a staging environment
+      authors: Morgan Hale
+      conference: Internal engineering lunch, Northwind Instruments, 2024
+
+languages:
+  - idiom: English
+    level: Native
+  - idiom: Spanish
+    level: Professional working
+
+interests:
+  - item: Trail running
+  - item: Mechanical keyboards
+  - item: Community theater
+
+display:
+  educationInSidebar: true

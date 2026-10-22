@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Illustrated portrait of Morgan Hale">
+  <rect width="160" height="160" fill="#f3cdc3"/>
+  <circle cx="80" cy="168" r="78" fill="#c24a36"/>
+  <path d="M48 78c2-28 14-46 32-46s30 18 32 46c-8 6-20 10-32 10s-24-4-32-10z" fill="#3a241c"/>
+  <circle cx="80" cy="74" r="26" fill="#e8b79a"/>
+  <path d="M54 70c4-22 14-32 26-32 14 0 24 12 28 32-8-6-18-8-28-8s-20 2-26 8z" fill="#3a241c"/>
+  <circle cx="70" cy="76" r="2.4" fill="#2a211c"/>
+  <circle cx="90" cy="76" r="2.4" fill="#2a211c"/>
+  <path d="M74 88c2.2 2 5 3 6.2 3s4-.8 6.2-3" fill="none" stroke="#a56b52" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

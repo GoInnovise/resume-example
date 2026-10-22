@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Projects = CollectionEntry<"resumes">["data"]["projects"];
+
+interface Props {
+  projects: Projects;
+}
+
+const { projects } = Astro.props;
+---
+
+{
+  projects && projects.assignments.length > 0 && (
+    <section class="resume-section">
+      <h2 class="font-heading text-brand-500 mb-3 text-lg font-semibold tracking-wide uppercase">
+        {projects.title}
+      </h2>
+      {projects.intro && (
+        <p class="text-text-secondary mb-4 leading-relaxed">{projects.intro}</p>
+      )}
+      <ul class="space-y-3">
+        {projects.assignments.map((p) => (
+          <li>
+            <p class="font-medium">
+              {p.link ? (
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-text-primary hover:text-brand-500 underline-offset-2 hover:underline"
+                >
+                  {p.title}
+                </a>
+              ) : (
+                <span class="text-text-primary">{p.title}</span>
+              )}
+            </p>
+            {p.tagline && (
+              <p class="text-text-secondary text-sm leading-relaxed">
+                {p.tagline}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

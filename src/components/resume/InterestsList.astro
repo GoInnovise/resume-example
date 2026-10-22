@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Interests = CollectionEntry<"resumes">["data"]["interests"];
+
+interface Props {
+  interests: Interests;
+}
+
+const { interests } = Astro.props;
+---
+
+{
+  interests && interests.length > 0 && (
+    <section class="resume-section mt-8">
+      <h2 class="font-heading mb-3 text-lg font-semibold tracking-wide text-white uppercase">
+        Interests
+      </h2>
+      <ul class="space-y-1.5 text-sm text-white/90">
+        {interests.map((interest) => (
+          <li>
+            {interest.link ? (
+              <a
+                href={interest.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-white/90 underline-offset-2 hover:text-white hover:underline"
+              >
+                {interest.item}
+              </a>
+            ) : (
+              <span>{interest.item}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
